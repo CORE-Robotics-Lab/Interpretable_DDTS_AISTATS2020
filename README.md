@@ -4,9 +4,10 @@ This is the codebase for running DDT agents in OpenAI Gym and the SC2LE (with mo
 
 ### Requirements
 
-Requirements are included in the `requirements.txt` file, install with:
+Requirements are included in the `requirements.txt` file, and this repo itself is a requirement. Install by running the following in the main directory:
 ```
 $ pip install -r requirements.txt
+$ pip install -e .
 ```
 Unfortunately, one of the requirements is now out-dated, so you must use the versions specified in the text file. Updating will cause a mismatch between the StarCraft II client and library.
 
