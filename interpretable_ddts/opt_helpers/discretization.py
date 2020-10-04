@@ -1,5 +1,6 @@
 # Created by Andrew Silva on 3/29/19
 import numpy as np
+import torch
 from interpretable_ddts.agents.ddt import DDT
 
 
@@ -32,7 +33,13 @@ def convert_to_discrete(fuzzy_model):
                        alpha=99999.,
                        is_value=fuzzy_model.is_value,
                        use_gpu=fuzzy_model.use_gpu)
-    crispy_model.action_probs.data = fuzzy_model.action_probs.data
+
+    # For maxes
+    max_inds = fuzzy_model.action_probs.data.argmax(dim=1)
+    new_action_probs = torch.zeros_like(fuzzy_model.action_probs.data)
+    new_action_probs[np.arange(len(new_action_probs)), max_inds] = 1
+
+    crispy_model.action_probs.data = new_action_probs
     if fuzzy_model.use_gpu:
         crispy_model = crispy_model.cuda()
 

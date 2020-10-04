@@ -183,10 +183,11 @@ class DDT(nn.Module):
 
         sig_vals = sig_vals.view(input_data.size(0), -1)
 
-        if not self.use_gpu:
-            one_minus_sig = torch.ones(sig_vals.size()).sub(sig_vals)
-        else:
-            one_minus_sig = torch.ones(sig_vals.size()).cuda().sub(sig_vals)
+        one_minus_sig = torch.ones(sig_vals.size())
+        if self.use_gpu:
+            one_minus_sig = one_minus_sig.to('cuda')
+
+        one_minus_sig = torch.sub(one_minus_sig, sig_vals)
 
         left_path_probs = self.left_path_sigs.t()
         right_path_probs = self.right_path_sigs.t()
@@ -209,7 +210,6 @@ class DDT(nn.Module):
 
         probs = torch.cat((left_path_probs, right_path_probs), dim=1)
         probs = probs.prod(dim=1)
-
         actions = probs.mm(self.action_probs)
 
         if not self.is_value:
