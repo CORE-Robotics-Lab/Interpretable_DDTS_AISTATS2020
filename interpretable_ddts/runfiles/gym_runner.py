@@ -8,9 +8,10 @@ from interpretable_ddts.opt_helpers.replay_buffer import discount_reward
 import torch.multiprocessing as mp
 import argparse
 import copy
+import random
 
 
-def run_episode(q, agent_in, ENV_NAME):
+def run_episode(q, agent_in, ENV_NAME, seed=0):
     agent = agent_in.duplicate()
     if ENV_NAME == 'lunar':
         env = gym.make('LunarLander-v2')
@@ -18,9 +19,13 @@ def run_episode(q, agent_in, ENV_NAME):
         env = gym.make('CartPole-v1')
     else:
         raise Exception('No valid environment selected')
-
-    state = env.reset()  # Reset environment and record the starting state
     done = False
+    torch.manual_seed(seed)
+    env.seed(seed)
+    np.random.seed(seed)
+    env.action_space.seed(seed)
+    random.seed(seed)
+    state = env.reset()  # Reset environment and record the starting state
 
     while not done:
         action = agent.get_action(state)

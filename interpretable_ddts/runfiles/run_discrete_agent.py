@@ -49,7 +49,7 @@ def search_for_good_model(env):
                 master_states.extend(replay_buffer['states'])
                 reward_after_five.append(reward)
 
-            crispy_actor = convert_to_discrete(policy_agent.action_network)
+            crispy_actor = convert_to_discrete(policy_agent.action_network, master_states)
 
             policy_agent.action_network = crispy_actor
 
@@ -80,7 +80,7 @@ def search_for_good_model(env):
     return best_fuzzy_fn, best_fn, max_fuzzy_reward, max_fuzzy_std, max_reward, max_std, all_results
 
 
-def run_a_model(fn):
+def run_a_model(fn, args_in, seed=None):
     num_runs = 15
     if 'cart' in fn:
         env = 'cart'
@@ -116,7 +116,7 @@ def run_a_model(fn):
     print(f"Average reward after {num_runs} runs is {reward_after_five/num_runs}")
 
     master_states = torch.cat([state[0] for state in master_states], dim=0)
-    if DISCRETIZE:
+    if args_in.discretize:
         crispy_actor = convert_to_discrete(policy_agent.action_network)  # Discretize DDT
     else:
         ###### test with a DT #######
@@ -138,13 +138,14 @@ def run_a_model(fn):
                            use_gpu=False)
 
     policy_agent.action_network = crispy_actor
-
     crispy_reward = []
-    for _ in range(num_runs):
+    for i in range(num_runs):
         if env == 'FindAndDefeatZerglings':
             crispy_out, replay_buffer = micro_episode(None, policy_agent, game_mode=env)
         if env in ['cart', 'lunar']:
-            crispy_out, replay_buffer = gym_episode(None, policy_agent, env)
+            torch.random.manual_seed(seed + i)
+            np.random.seed(seed + i)
+            crispy_out, replay_buffer = gym_episode(None, policy_agent, env, seed=seed+i)
         crispy_reward.append(crispy_out)
 
     leaves = crispy_actor.leaf_init_information
@@ -176,9 +177,10 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--model_fn', help="model filename for running", type=str, default="")
     args = parser.parse_args()
 
-    DISCRETIZE = args.discretize
     envir = args.env_type
     model_dir = args.model_dir
+    # args.run_model = True
+    # args.discretize = True
 
     if args.find_model:
         diff_fn, discrete_fn, diff_reward, diff_std, disc_reward, disc_std, all_results = search_for_good_model(envir)
@@ -187,4 +189,9 @@ if __name__ == "__main__":
     if args.run_model:
         if len(args.model_fn) < 1:
             discrete_fn = (os.path.join(model_dir, discrete_fn))
-        run_a_model(discrete_fn)
+        else:
+            discrete_fn = args.model_fn
+        run_a_model(discrete_fn, args, seed=12496)
+        # cartpole random seeds include: [11421, 12494, 12495, 12496,
+        # 30867, 30868, 30869, 30870, 30871, 30872, 34662, 38979, 38980, 45603, 45604, 45605, 45606, 46760, 46761,
+        # 50266, 50267, 54857, 65926, 70614, 79986, 79987, 79988, 79989]

@@ -34,12 +34,15 @@ def convert_to_discrete(fuzzy_model):
                        is_value=fuzzy_model.is_value,
                        use_gpu=fuzzy_model.use_gpu)
 
-    # For maxes
-    max_inds = fuzzy_model.action_probs.data.argmax(dim=1)
-    new_action_probs = torch.zeros_like(fuzzy_model.action_probs.data)
-    new_action_probs[np.arange(len(new_action_probs)), max_inds] = 1
+    # For a ddt that preserves actions using softmaxes, use old action probs
+    crispy_model.action_probs.data = fuzzy_model.action_probs.data
+    #
+    # For a set of discrete ddt parameters (0, 1) leaves, use the one-hot method:
+    # max_inds = fuzzy_model.action_probs.data.argmax(dim=1)
+    # new_action_probs = torch.zeros_like(fuzzy_model.action_probs.data)
+    # new_action_probs[np.arange(len(new_action_probs)), max_inds] = 10
+    # crispy_model.action_probs.data = new_action_probs
 
-    crispy_model.action_probs.data = new_action_probs
     if fuzzy_model.use_gpu:
         crispy_model = crispy_model.cuda()
 
