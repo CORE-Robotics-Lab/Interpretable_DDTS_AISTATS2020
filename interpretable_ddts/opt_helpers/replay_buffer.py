@@ -156,8 +156,8 @@ def discount_reward(reward, value, deeper_value):
     else:
         deeper_advantage_list = [None] * len(all_rewards)
     # Scale rewards
-    rewards = (rewards - rewards.mean()) / (rewards.std() + torch.Tensor([np.finfo(np.float32).eps]))
-    advantages = (advantages - advantages.mean()) / (advantages.std() + torch.Tensor([np.finfo(np.float32).eps]))
+    # rewards = (rewards - rewards.mean()) / (rewards.std() + torch.Tensor([np.finfo(np.float32).eps]))
+    # advantages = (advantages - advantages.mean()) / (advantages.std() + torch.Tensor([np.finfo(np.float32).eps]))
     rewards_list = rewards.detach().clone().cpu().numpy().tolist()
     advantage_list = advantages.detach().clone().cpu().numpy().tolist()
     return rewards_list, advantage_list, deeper_advantage_list

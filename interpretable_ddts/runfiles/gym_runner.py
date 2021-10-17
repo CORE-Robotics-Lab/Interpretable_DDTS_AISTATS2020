@@ -78,8 +78,8 @@ def main(episodes, agent, ENV_NAME):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--agent_type", help="architecture of agent to run", type=str, default='ddt')
-    parser.add_argument("-e", "--episodes", help="how many episodes", type=int, default=1000)
-    parser.add_argument("-l", "--num_leaves", help="number of leaves for DDT/DRL ", type=int, default=4)
+    parser.add_argument("-e", "--episodes", help="how many episodes", type=int, default=2000)
+    parser.add_argument("-l", "--num_leaves", help="number of leaves for DDT/DRL ", type=int, default=8)
     parser.add_argument("-n", "--num_hidden", help="number of hidden layers for MLP ", type=int, default=0)
     parser.add_argument("-env", "--env_type", help="environment to run on", type=str, default='cart')
     parser.add_argument("-gpu", help="run on GPU?", action='store_true')

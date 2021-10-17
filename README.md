@@ -18,8 +18,8 @@ Installing StarCraft II can be a bit of a pain, head to: https://github.com/Bliz
 Training DDT and MLP agents in each environment is relatively straightforward. For the Gym agents (Lunar Lander and Cart Pole), use the `runfiles/gym_runner.py` script. Command-line args allow you to set the agent type and the environment:
 
 * `-a` or `--agent_type`: Which agent to run? String input, use `ddt` or `mlp`. Defaults to `ddt`
-* `-e` or `--episodes`: How many episodes to run? Int input, Defaults to 1000.
-* `-l` or `--num_leaves`: How many leaves for the DDT/DRL? Int input, defaults to 4
+* `-e` or `--episodes`: How many episodes to run? Int input, Defaults to 2000.
+* `-l` or `--num_leaves`: How many leaves for the DDT/DRL? Int input, defaults to 8
 * `-n` or `--num_hidden`: How many hidden layers for the MLP? Int input, defaults to 0
 * `-env` or `--env_type`: Which environment to run in? String input, use `cart` or `lunar`. Defaults to `cart`
 * `-gpu`: Flag to run on the GPU. Because the GPU isn't really the bottleneck, this isn't a huge speedup.

@@ -34,11 +34,12 @@ class PPO:
         self.epoch_counter = 0
 
     def batch_updates(self, rollouts, agent_in):
-        # batch_size = max(rollouts.step // 32, 1)
-        # num_iters = rollouts.step // batch_size
-        batch_size = 8
-        num_iters = 4
-
+        if self.actor.input_dim < 10:
+            batch_size = max(rollouts.step // 16, 1)
+            num_iters = rollouts.step // batch_size
+        else:
+            num_iters = 4
+            batch_size = 8
         total_action_loss = torch.Tensor([0])
         total_value_loss = torch.Tensor([0])
         for iteration in range(num_iters):
@@ -79,12 +80,12 @@ class PPO:
             entropy = update_m.entropy().mean().mul(self.entropy_coef)
 
             # PPO Updates
-            # ratio = torch.exp(update_log_probs - action_probs)
-            # surr1 = ratio * adv_targ
-            # surr2 = torch.clamp(ratio, 1.0 - self.clip_param, 1.0 + self.clip_param) * adv_targ
-            # action_loss = -torch.min(surr1, surr2).mean()
+            ratio = torch.exp(update_log_probs - action_probs)
+            surr1 = ratio * adv_targ
+            surr2 = torch.clamp(ratio, 1.0 - self.clip_param, 1.0 + self.clip_param) * adv_targ
+            action_loss = -torch.min(surr1, surr2).mean()
             # Policy Gradient:
-            action_loss = (torch.sum(torch.mul(update_log_probs, adv_targ).mul(-1), -1))
+            # action_loss = (torch.sum(torch.mul(update_log_probs, adv_targ).mul(-1), -1))
             if self.use_gpu:
                 reward = reward.cuda()
             value_loss = F.mse_loss(reward, new_value)
