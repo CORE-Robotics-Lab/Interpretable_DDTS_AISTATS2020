@@ -4,7 +4,7 @@ import torch
 from interpretable_ddts.agents.ddt import DDT
 
 
-def convert_to_discrete(fuzzy_model):
+def convert_to_discrete(fuzzy_model, master_states=None):
     new_weights = []
     new_comps = []
 
