@@ -88,8 +88,8 @@ def run_a_model(fn, args_in, seed=None):
         env = 'lunar'
     elif 'FindAndDefeatZerglings' in fn:
         env = 'FindAndDefeatZerglings'
-    final_deep_actor_fn = os.path.join(model_dir, fn)
-    final_deep_critic_fn = os.path.join(model_dir, fn)
+    final_deep_actor_fn = os.path.join(model_dir, fn) if not fn.startswith(model_dir) else fn
+    final_deep_critic_fn = os.path.join(model_dir, fn) if not fn.startswith(model_dir) else fn
 
     fda = load_ddt(final_deep_actor_fn)
     fdc = load_ddt(final_deep_critic_fn)
