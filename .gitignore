@@ -1,4 +1,5 @@
 # Outputs
+interpretable_ddts/models
 models/
 txts/
 
@@ -113,6 +114,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+env
 
 # Spyder project settings
 .spyderproject
