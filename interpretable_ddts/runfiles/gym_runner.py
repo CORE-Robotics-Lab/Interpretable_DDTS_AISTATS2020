@@ -72,6 +72,7 @@ def main(episodes, agent, ENV_NAME):
         if episode % 50 == 0:
             print(f'Episode {episode}  Last Reward: {reward}  Average Reward: {running_reward}')
         if episode % 500 == 0:
+            agent.save(models_path / f"{episode}th")
     # Save final episode
     if episode % 50 != 0:
         print(f"Episode {episode}  Last Reward: {reward}  Average Reward: {running_reward}")
