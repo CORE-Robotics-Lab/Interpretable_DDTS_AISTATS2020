@@ -56,6 +56,8 @@ def run_episode(q, agent_in, ENV_NAME, seed=0):
 
 def main(episodes, agent, ENV_NAME):
     running_reward_array = []
+    models_path = Path('../models')
+    models_path.mkdir(parents=True, exist_ok=True)
     for episode in range(episodes):
         reward = 0
         returned_object = run_episode(None, agent_in=agent, ENV_NAME=ENV_NAME)
@@ -63,14 +65,19 @@ def main(episodes, agent, ENV_NAME):
         running_reward_array.append(returned_object[0])
         agent.replay_buffer.extend(returned_object[1])
         if reward >= 499:
-            agent.save('../models/'+str(episode)+'th')
+            agent.save(models_path / f"{episode}th")
         agent.end_episode(reward)
 
         running_reward = sum(running_reward_array[-100:]) / float(min(100.0, len(running_reward_array)))
         if episode % 50 == 0:
             print(f'Episode {episode}  Last Reward: {reward}  Average Reward: {running_reward}')
         if episode % 500 == 0:
-            agent.save('../models/'+str(episode)+'th')
+            agent.save(models_path / f"{episode}th")
+    # Save final episode
+    if episode % 50 != 0:
+        print(f"Episode {episode}  Last Reward: {reward}  Average Reward: {running_reward}")
+    if episode % 500 != 0:
+        agent.save(models_path / f"{episode}th")
 
     return running_reward_array
 

@@ -88,8 +88,8 @@ def run_a_model(fn, args_in, seed=None):
         env = 'lunar'
     elif 'FindAndDefeatZerglings' in fn:
         env = 'FindAndDefeatZerglings'
-    final_deep_actor_fn = os.path.join(model_dir, fn)
-    final_deep_critic_fn = os.path.join(model_dir, fn)
+    final_deep_actor_fn = os.path.join(model_dir, fn) if not fn.startswith(model_dir) else fn
+    final_deep_critic_fn = os.path.join(model_dir, fn) if not fn.startswith(model_dir) else fn
 
     fda = load_ddt(final_deep_actor_fn)
     fdc = load_ddt(final_deep_critic_fn)
@@ -143,6 +143,8 @@ def run_a_model(fn, args_in, seed=None):
         if env == 'FindAndDefeatZerglings':
             crispy_out, replay_buffer = micro_episode(None, policy_agent, game_mode=env)
         if env in ['cart', 'lunar']:
+            if seed is None:
+                seed = np.random.randint(100000)
             torch.random.manual_seed(seed + i)
             np.random.seed(seed + i)
             crispy_out, replay_buffer = gym_episode(None, policy_agent, env, seed=seed+i)

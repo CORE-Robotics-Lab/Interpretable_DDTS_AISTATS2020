@@ -149,15 +149,15 @@ class DDTAgent:
         self.replay_buffer.clear()
 
     def save(self, fn='last'):
-        act_fn = fn + self.bot_name + '_actor_' + '.pth.tar'
-        val_fn = fn + self.bot_name + '_critic_' + '.pth.tar'
+        act_fn = str(fn) + self.bot_name + '_actor_' + '.pth.tar'
+        val_fn = str(fn) + self.bot_name + '_critic_' + '.pth.tar'
 
         save_ddt(act_fn, self.action_network)
         save_ddt(val_fn, self.value_network)
 
     def load(self, fn='last'):
-        act_fn = fn + self.bot_name + '_actor_' + '.pth.tar'
-        val_fn = fn + self.bot_name + '_critic_' + '.pth.tar'
+        act_fn = str(fn) + self.bot_name + '_actor_' + '.pth.tar'
+        val_fn = str(fn) + self.bot_name + '_critic_' + '.pth.tar'
 
         if os.path.exists(act_fn):
             self.action_network = load_ddt(act_fn)

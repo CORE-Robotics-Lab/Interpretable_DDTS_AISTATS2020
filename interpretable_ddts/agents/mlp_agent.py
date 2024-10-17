@@ -1,3 +1,4 @@
+from pathlib import Path
 import torch
 import torch.nn as nn
 from torch.distributions import Categorical
@@ -107,10 +108,11 @@ class MLPAgent:
     def end_episode(self, timesteps):
         self.reward_history.append(timesteps)
         value_loss, action_loss = self.ppo.batch_updates(self.replay_buffer, self)
-        bot_name = '../txts/' + self.bot_name
+        txts_path = Path('../txts')
+        txts_path.mkdir(parents=True, exist_ok=True)
+        rewards_file = txts_path / (self.bot_name + '_rewards.txt')
         self.num_steps += 1
-        with open(bot_name + '_rewards.txt', 'a') as myfile:
-            myfile.write(str(timesteps) + '\n')
+        rewards_file.open("a").write(str(timesteps) + "\n")
 
     def reset(self):
         self.replay_buffer.clear()
@@ -120,7 +122,7 @@ class MLPAgent:
         checkpoint = dict()
         checkpoint['actor'] = self.action_network.state_dict()
         checkpoint['value'] = self.value_network.state_dict()
-        torch.save(checkpoint, fn+self.bot_name+'.pth.tar')
+        torch.save(checkpoint, str(fn)+self.bot_name+'.pth.tar')
 
     def load(self, fn='last'):
         # fn = fn + self.bot_name + '.pth.tar'

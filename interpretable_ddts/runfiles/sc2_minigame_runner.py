@@ -182,7 +182,7 @@ def run_episode(q, main_agent, game_mode):
     except Exception as e:
         print(str(e))
         print("No worries", e, " carry on please")
-    if type(result) == list and len(result) > 1:
+    if isinstance(result, list) and len(result) > 1:
         result = result[0]
     reward_sum = bot.finish_episode(result)
     for agent in bot.agent_list+bot.dead_agent_list:

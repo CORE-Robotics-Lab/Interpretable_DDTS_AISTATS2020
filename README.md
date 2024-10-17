@@ -11,6 +11,17 @@ $ pip install -e .
 ```
 Unfortunately, one of the requirements is now out-dated, so you must use the versions specified in the text file. Updating will cause a mismatch between the StarCraft II client and library.
 
+#### Troubleshooting
+
+If you face issues when creating an environment it could be linked to `box2d-py`. To install, run one of the following commands:
+```shell
+$ pip install gym[box2d]==0.17.2
+# if this fails, try
+$ pip install gym[box2d]==0.17.2 swig
+# or
+$ pip install Box2D==2.3.10
+```
+
 #### StarCraft II
 Installing StarCraft II can be a bit of a pain, head to: https://github.com/Blizzard/s2client-proto#downloads to grab the Linux binary from Blizzard. The version that works with this research is 3.16.1, and be sure to install the maps from the DeepMind `pysc2` library: https://github.com/deepmind/pysc2.
 
